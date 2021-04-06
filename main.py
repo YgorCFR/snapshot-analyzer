@@ -19,8 +19,15 @@ def main(profile=None, region=None):
     logger.info(list_instances(ec2))
     
 def list_instances(ec2):
-    # Listing the instances id's
-    return [instance.id for instance in ec2.instances.all()]
+    '''
+        The function that list the instances
+    '''
+    # Listing the instances id's and other characteristics
+    return [', '.join((instance.id, 
+                      instance.instance_type,
+                      instance.placement['AvailabilityZone'],
+                      instance.state['Name'],
+                      instance.public_dns_name)) for instance in ec2.instances.all()]
 
 if __name__ == '__main__':
     main()
