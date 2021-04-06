@@ -1,5 +1,11 @@
 import boto3
 import click
+import logging
+
+# Defining logging settings
+logger = logging.getLogger()  # Set logger as a variable to be used
+logging.basicConfig(format='[%(levelname)s][%(asctime)s]:%(message)s',level=logging.INFO, datefmt='%d/%m/%Y %I:%M:%S %p')  # Limit logger for code 10 or higher
+
 
 @click.command()
 @click.option('--profile', help="Name of the profile", required=True)
@@ -9,9 +15,12 @@ def main(profile=None, region=None):
     session = boto3.Session(profile_name=profile, region_name=region)
     # Attaching to EC2
     ec2 = session.resource('ec2')
-    # Lising the instances
-    for i in ec2.instances.all():
-        print(f'INSTANCE OF ID: {i.id}')
+    # List instances
+    logger.info(list_instances(ec2))
+    
+def list_instances(ec2):
+    # Listing the instances id's
+    return [instance.id for instance in ec2.instances.all()]
 
 if __name__ == '__main__':
     main()
